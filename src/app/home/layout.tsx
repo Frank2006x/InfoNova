@@ -6,7 +6,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <>
     <nav className="sticky top-0 left-0 w-full h-[8vh] bg-sidebar  border-b-2   border-sidebar-border ">
         <div className="text-white p-4">
-          <h1 className="font-serif">My Website</h1>
+          <h1 className="font-mono text-xl">AgentHive</h1>
         </div>
     </nav>
     <div >

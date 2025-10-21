@@ -7,12 +7,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-
-
 const RightPanel: React.FC = () => {
   const [isWide, setIsWide] = useState(true);
   const panelRef = useRef<HTMLDivElement>(null);
-  const [selectedAgent, setSelectedAgent] = useState<"Lexa" | "Trace" | "Bolt" | null>(null);
+  const [selectedAgent, setSelectedAgent] = useState<
+    "Lexa" | "Trace" | "Bolt" | null
+  >(null);
   useEffect(() => {
     const observeResize = () => {
       if (panelRef.current) {
@@ -38,7 +38,14 @@ const RightPanel: React.FC = () => {
       {isWide ? (
         <section className="flex gap-3 w-full justify-evenly" id="agents">
           <div className="flex flex-col items-center gap-2">
-            <div className="rounded-full bg-muted flex items-center justify-center relative">
+            <div
+              onClick={() => setSelectedAgent("Lexa")}
+              className={`rounded-full bg-muted flex items-center justify-center relative ${
+                selectedAgent === "Lexa"
+                  ? "ring-2 ring-blue-400 shadow-[0_0_24px_rgba(59,130,246,0.55)]"
+                  : ""
+              }`}
+            >
               <div className="absolute left-0 bg-muted w-15 h-15 rounded-full flex items-center justify-center ">
                 <div className=" bg-blue-500 w-10 h-10 rounded-full flex items-center justify-center">
                   <BookOpenCheck />
@@ -72,7 +79,14 @@ const RightPanel: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            <div className="rounded-full bg-muted flex items-center justify-center relative">
+            <div
+              onClick={() => setSelectedAgent("Trace")}
+              className={`rounded-full bg-muted flex items-center justify-center relative ${
+                selectedAgent === "Trace"
+                  ? "ring-2 ring-orange-400 shadow-[0_0_24px_rgba(234,88,12,0.55)]"
+                  : ""
+              }`}
+            >
               <div className="absolute left-0 bg-muted w-15 h-15 rounded-full flex items-center justify-center ">
                 <div className="bg-red-500 w-10 h-10 rounded-full flex items-center justify-center">
                   <Bug />
@@ -82,7 +96,7 @@ const RightPanel: React.FC = () => {
                 <span className="text-white font-semibold text-md font-mono ">
                   Trace
                 </span>
-                <Tooltip >
+                <Tooltip>
                   <TooltipTrigger asChild>
                     <button
                       type="button"
@@ -106,7 +120,14 @@ const RightPanel: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            <div className="rounded-full bg-muted flex items-center justify-center relative">
+            <div
+              onClick={() => setSelectedAgent("Bolt")}
+              className={`rounded-full bg-muted flex items-center justify-center relative ${
+                selectedAgent === "Bolt"
+                  ? "ring-2 ring-emerald-400 shadow-[0_0_24px_rgba(4,120,87,0.55)]"
+                  : ""
+              }`}
+            >
               <div className="absolute left-0 bg-muted w-15 h-15 rounded-full flex items-center justify-center ">
                 <div className="bg-green-500 w-10 h-10 rounded-full flex items-center justify-center">
                   <Wrench />
@@ -144,7 +165,14 @@ const RightPanel: React.FC = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer">
-                <div className="bg-muted w-20 h-20 rounded-full flex items-center justify-center ">
+                <div
+                  onClick={() => setSelectedAgent("Lexa")}
+                  className={`bg-muted w-20 h-20 rounded-full flex items-center justify-center ${
+                    selectedAgent === "Lexa"
+                      ? "ring-2 ring-blue-400 shadow-[0_0_24px_rgba(59,130,246,0.55)]"
+                      : ""
+                  }`}
+                >
                   <div className="bg-blue-500 w-15 h-15 rounded-full flex items-center justify-center">
                     <BookOpenCheck size={30} />
                   </div>
@@ -165,7 +193,14 @@ const RightPanel: React.FC = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer">
-                <div className="bg-muted w-20 h-20 rounded-full flex items-center justify-center ">
+                <div
+                  onClick={() => setSelectedAgent("Trace")}
+                  className={`bg-muted w-20 h-20 rounded-full flex items-center justify-center ${
+                    selectedAgent === "Trace"
+                      ? "ring-2 ring-orange-400 shadow-[0_0_24px_rgba(234,88,12,0.55)]"
+                      : ""
+                  }`}
+                >
                   <div className="bg-red-500 w-15 h-15 rounded-full flex items-center justify-center">
                     <Bug size={30} />
                   </div>
@@ -185,7 +220,14 @@ const RightPanel: React.FC = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer">
-                <div className="bg-muted w-20 h-20 rounded-full flex items-center justify-center ">
+                <div
+                  onClick={() => setSelectedAgent("Bolt")}
+                  className={`bg-muted w-20 h-20 rounded-full flex items-center justify-center ${
+                    selectedAgent === "Bolt"
+                      ? "ring-2 ring-emerald-400 shadow-[0_0_24px_rgba(4,120,87,0.55)]"
+                      : ""
+                  }`}
+                >
                   <div className="bg-green-500 w-15 h-15 rounded-full flex items-center justify-center">
                     <Wrench size={30} />
                   </div>
