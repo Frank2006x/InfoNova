@@ -1,11 +1,17 @@
 "use client";
-import { BookOpenCheck, Bug, Wrench, Info } from "lucide-react";
+import { BookOpenCheck, Bug, Wrench, Info, ArrowUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  InputGroup,
+  InputGroupTextarea,
+  InputGroupAddon,
+  InputGroupText,
+} from "./ui/input-group";
 
 const RightPanel: React.FC = () => {
   const [isWide, setIsWide] = useState(true);
@@ -246,6 +252,33 @@ const RightPanel: React.FC = () => {
           </Tooltip>
         </section>
       )}
+      <section
+        id="chat"
+        className="bg-card h-full rounded-2xl p-4 mt-4 flex flex-col"
+      >
+        <div className="flex-1 overflow-y-auto">
+          {/* your chat messages go here */}
+        </div>
+
+        <div className="mt-2">
+          <InputGroup>
+            <InputGroupTextarea placeholder="Enter your message" />
+
+            <InputGroupAddon align="block-end">
+              <div className="flex items-center w-full pr-2 justify-between">
+                <button className="w-10 h-10 flex items-center justify-center rounded-2xl bg-white text-background hover:opacity-90 transition">
+                  <ArrowUp className="w-5 h-5" />
+                </button>
+                {selectedAgent ? (
+                  <InputGroupText className="text-white/50 font-semibold cursor-pointer whitespace-nowrap ">
+                    Agent {selectedAgent} on action
+                  </InputGroupText>
+                ) : null}
+              </div>
+            </InputGroupAddon>
+          </InputGroup>
+        </div>
+      </section>
     </div>
   );
 };
