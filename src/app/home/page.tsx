@@ -1,4 +1,5 @@
 import RightPanel from "@/components/RightPanel";
+import LeftPanel from "@/components/LeftPanel";
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -9,15 +10,18 @@ const HomePage = () => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="min-h-[92vh] max-w-md rounded-lg border md:min-w-screen"
+      className="h-full max-w-md rounded-lg border md:min-w-screen"
     >
-      <ResizablePanel defaultSize={60}>
-        <div className="flex h-full items-center justify-center p-6">
-          <span className="font-semibold">Sidebar</span>
-        </div>
+      <ResizablePanel defaultSize={60} className="overflow-hidden">
+        <LeftPanel />
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={40} minSize={25} maxSize={50}>
+      <ResizablePanel
+        defaultSize={40}
+        minSize={25}
+        maxSize={50}
+        className="overflow-hidden"
+      >
         <RightPanel />
       </ResizablePanel>
     </ResizablePanelGroup>
