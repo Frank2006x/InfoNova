@@ -6,12 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  InputGroup,
-  InputGroupTextarea,
-  InputGroupAddon,
-  InputGroupText,
-} from "./ui/input-group";
+
 import RunButton from "./RunButton";
 
 const RightPanel: React.FC = () => {
@@ -39,6 +34,8 @@ const RightPanel: React.FC = () => {
       resizeObserver.disconnect();
     };
   }, []);
+
+  
 
   return (
     <div ref={panelRef} className="flex h-full flex-col p-6">
@@ -261,8 +258,8 @@ const RightPanel: React.FC = () => {
           {/* your chat messages go here */}
         </div>
 
-        <div className="mt-2 flex justify-evenly items-center">
-          <RunButton />
+        <div className="mt-2 flex justify-evenly items-center" onClick={handleRunClick}>
+          <RunButton  />
 
           {/* {selectedAgent ? (
             <InputGroupText className="text-white/50 font-semibold cursor-pointer whitespace-nowrap ">
