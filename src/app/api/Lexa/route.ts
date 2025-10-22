@@ -1,70 +1,80 @@
-import { createAgent, tool } from "langchain";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { CodeExecutionTool } from "@google/generative-ai";
-import { PromptTemplate } from "@langchain/core/prompts";
-import z from "zod/v3";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 export async function POST(request: Request) {
   try {
     const { language, code, question } = await request.json();
 
-    // const codeExecutionTool: CodeExecutionTool = { codeExecution: {} };
-    // const wrapperedCodeExecutionTool = tool(codeExecutionTool, {
-    //   name: "CodeExecutionTool",
-    //   description: "A tool for executing code snippets",
-
-    // });
-    const resType = z.object({
-      output: z.string(),
-    });
+    // Initialize LLM
     const llm = new ChatGoogleGenerativeAI({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.0-flash-exp",
       temperature: 0.2,
-      maxOutputTokens: 1024,
+      maxOutputTokens: 8192, // Ensure enough tokens for long explanations
     });
 
-    const promptTemplate = new PromptTemplate({
-      inputVariables: ["language", "code", "question"],
-      template: `
-You are **Lexa**, an advanced AI programming assistant and code explainer.
+    // Detailed system prompt for Markdown-formatted explanation
+    const systemPrompt = `# Lexa — Expert ${language} Code Explainer 🤖💡
 
-Your job:
-- Understand the provided {language} code.
-- Answer the question clearly.
-- Be concise, accurate, and friendly.
+You are Lexa, an expert ${language} programmer and code explainer. Analyze the given code and provide a **complete, structured explanation in Markdown**.
 
-**Code Snippet:**
-{code}
+---
 
-**Question:**
-{question}
-      `,
-    });
+## Guidelines:
 
-    const systemPrompt = await promptTemplate.format({
-      language,
-      code,
-      question,
-    });
+1. **Step-by-step breakdown** with numbered steps.
+2. Highlight key concepts in **bold**.
+3. Use \`inline code\` for functions, variables, and code references.
+4. Include **examples or sample outputs** where relevant.
+5. Use headings, bullet points, and proper Markdown formatting.
+6. **Do not modify, optimize, or debug the code** unless explicitly asked.
+7. **Complete the full explanation**; never stop mid-sentence.
+8. make use of emojis to enhance readability and engagement.
+9. whenever you refer to code blocks, use proper Markdown triple backticks with language specified.
 
-    const lexaAgent = createAgent({
-      model: llm,
-      tools: [],
-      systemPrompt,
-      responseFormat: resType,
-    });
+---
 
-    const res = await lexaAgent.invoke({
-      messages: [{ role: "user", content: question }],
-    });
+## Code to analyze:
+\`\`\`${language}
+${code}
+\`\`\`
 
-    return new Response(JSON.stringify({ answer: res.structuredResponse }), {
-      status: 200,
-    });
+## Question:
+${question}
+
+---
+
+Provide your answer in Markdown below:
+`;
+
+    const messages = [
+      new SystemMessage(systemPrompt),
+      new HumanMessage(question),
+    ];
+
+    // Invoke LLM without streaming
+    const response = await llm.invoke(messages);
+
+    return new Response(
+      JSON.stringify({
+        answer: {
+          output: response.content,
+        },
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (err) {
     console.error(err);
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500,
-    });
+    const errorMessage =
+      err instanceof Error ? err.message : "Unknown error occurred";
+    return new Response(
+      JSON.stringify({ error: errorMessage }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 }

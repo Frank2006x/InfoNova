@@ -1,8 +1,10 @@
 "use client";
-import { BookOpenCheck, Bug, Wrench, Info, ArrowUp } from "lucide-react";
+import { BookOpenCheck, Bug, Wrench, Info } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useCodeStore } from "@/store/codeStore";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   Tooltip,
   TooltipContent,
@@ -18,6 +20,7 @@ const RightPanel: React.FC = () => {
     "Lexa" | "Trace" | "Bolt" | null
   >(null);
   const { code, language } = useCodeStore();
+  const [chat, setChat] = useState<string[]>([]);
   useEffect(() => {
     const observeResize = () => {
       if (panelRef.current) {
@@ -46,6 +49,7 @@ const RightPanel: React.FC = () => {
       question: "Explain the code above.",
     });
     console.log(res.data);
+    setChat((prev) => [...prev, res.data.answer.output]);
   };
 
   return (
@@ -266,7 +270,44 @@ const RightPanel: React.FC = () => {
         className="bg-card h-full rounded-2xl p-4 mt-4 flex flex-col"
       >
         <div className="flex-1 overflow-y-auto">
-          {/* your chat messages go here */}
+          {chat.map((message, index) => (
+            <div key={index} className="mb-4 prose prose-invert max-w-none">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  code({ className, children, ...props }) {
+                    const isInline = !className;
+                    return isInline ? (
+                      <code
+                        className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono"
+                        {...props}
+                      >
+                        {children}
+                      </code>
+                    ) : (
+                      <code
+                        className={`block bg-muted/50 p-4 rounded-lg overflow-x-auto font-mono text-sm ${
+                          className || ""
+                        }`}
+                        {...props}
+                      >
+                        {children}
+                      </code>
+                    );
+                  },
+                  pre({ children }) {
+                    return (
+                      <pre className="bg-muted/30 rounded-lg overflow-hidden my-4">
+                        {children}
+                      </pre>
+                    );
+                  },
+                }}
+              >
+                {message}
+              </ReactMarkdown>
+            </div>
+          ))}
         </div>
 
         <div
