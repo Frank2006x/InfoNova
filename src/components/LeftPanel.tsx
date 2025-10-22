@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCodeStore } from "@/store/codeStore";
 
 type LanguageKey =
   | "python"
@@ -40,7 +41,7 @@ const languageExtensions: Record<LanguageKey, Extension> = {
 const LeftPanel: React.FC = () => {
   const [lang, setLang] = useState<LanguageKey>("python");
 
-  const [code, setCode] = useState<string>();
+  const { code, language, setCode, setLanguage } = useCodeStore();
 
   const extensions = useMemo(() => {
     return [languageExtensions[lang]];
@@ -62,7 +63,10 @@ const LeftPanel: React.FC = () => {
         <label className="text-sm text-muted-foreground">Language</label>
         <Select
           value={lang}
-          onValueChange={(value) => setLang(value as LanguageKey)}
+          onValueChange={(value) => {
+            setLang(value as LanguageKey);
+            setLanguage(value as LanguageKey);
+          }}
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select language" />

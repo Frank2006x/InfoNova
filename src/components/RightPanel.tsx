@@ -1,6 +1,8 @@
 "use client";
 import { BookOpenCheck, Bug, Wrench, Info, ArrowUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useCodeStore } from "@/store/codeStore";
+import axios from "axios";
 import {
   Tooltip,
   TooltipContent,
@@ -15,6 +17,7 @@ const RightPanel: React.FC = () => {
   const [selectedAgent, setSelectedAgent] = useState<
     "Lexa" | "Trace" | "Bolt" | null
   >(null);
+  const { code, language } = useCodeStore();
   useEffect(() => {
     const observeResize = () => {
       if (panelRef.current) {
@@ -35,7 +38,15 @@ const RightPanel: React.FC = () => {
     };
   }, []);
 
-  
+  const handleRunClick = async () => {
+    console.log("Running agent with code and language:", code, language);
+    const res = await axios.post("/api/Lexa", {
+      code,
+      language,
+      question: "Explain the code above.",
+    });
+    console.log(res.data);
+  };
 
   return (
     <div ref={panelRef} className="flex h-full flex-col p-6">
@@ -258,8 +269,11 @@ const RightPanel: React.FC = () => {
           {/* your chat messages go here */}
         </div>
 
-        <div className="mt-2 flex justify-evenly items-center" onClick={handleRunClick}>
-          <RunButton  />
+        <div
+          className="mt-2 flex justify-evenly items-center"
+          onClick={handleRunClick}
+        >
+          <RunButton />
 
           {/* {selectedAgent ? (
             <InputGroupText className="text-white/50 font-semibold cursor-pointer whitespace-nowrap ">
