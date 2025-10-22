@@ -38,7 +38,7 @@ const languageExtensions: Record<LanguageKey, Extension> = {
 };
 
 const LeftPanel: React.FC = () => {
-  const [lang, setLang] = useState<LanguageKey>("javascript");
+  const [lang, setLang] = useState<LanguageKey>("python");
 
   const [code, setCode] = useState<string>();
 
