@@ -1,5 +1,5 @@
 "use client";
-import { BookOpenCheck, Bug, Wrench, Info } from "lucide-react";
+import { BookOpenCheck, Bug, Wrench, Info, ArrowUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useCodeStore } from "@/store/codeStore";
 import axios from "axios";
@@ -11,7 +11,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import RunButton from "./RunButton";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroupTextarea,
+} from "./ui/input-group";
 
 const RightPanel: React.FC = () => {
   const [isWide, setIsWide] = useState(true);
@@ -20,6 +25,7 @@ const RightPanel: React.FC = () => {
     "Lexa" | "Trace" | "Bolt" | null
   >(null);
   const { code, language } = useCodeStore();
+  const [question, setQuestion] = useState("Explain the code above.");
   const [chat, setChat] = useState<string[]>([]);
   useEffect(() => {
     const observeResize = () => {
@@ -42,11 +48,16 @@ const RightPanel: React.FC = () => {
   }, []);
 
   const handleRunClick = async () => {
-    console.log("Running agent with code and language:", code, language);
+    console.log(
+      "Running agent with code and language:",
+      code,
+      language,
+      question
+    );
     const res = await axios.post("/api/Lexa", {
       code,
       language,
-      question: "Explain the code above.",
+      question,
     });
     console.log(res.data);
     setChat((prev) => [...prev, res.data.answer.output]);
@@ -310,17 +321,36 @@ const RightPanel: React.FC = () => {
           ))}
         </div>
 
-        <div
-          className="mt-2 flex justify-evenly items-center"
-          onClick={handleRunClick}
-        >
-          <RunButton />
+        <div className=" flex justify-evenly items-center">
+          <InputGroup>
+            <InputGroupTextarea
+              placeholder="Enter your message"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+            />
 
-          {/* {selectedAgent ? (
+            <InputGroupAddon align="block-end">
+              <div className="flex items-center w-full pr-2 justify-between">
+                <button
+                  className="w-10 h-10 flex items-center justify-center rounded-2xl bg-white text-background hover:opacity-90 transition"
+                  onClick={() => handleRunClick()}
+                >
+                  <ArrowUp className="w-5 h-5" />
+                </button>
+                {selectedAgent ? (
+                  <InputGroupText className="text-white/50 font-semibold cursor-pointer whitespace-nowrap ">
+                    Agent {selectedAgent} on action
+                  </InputGroupText>
+                ) : null}
+              </div>
+            </InputGroupAddon>
+          </InputGroup>
+
+          {selectedAgent ? (
             <InputGroupText className="text-white/50 font-semibold cursor-pointer whitespace-nowrap ">
               Agent {selectedAgent} on action
             </InputGroupText>
-          ) : null} */}
+          ) : null}
         </div>
       </section>
     </div>

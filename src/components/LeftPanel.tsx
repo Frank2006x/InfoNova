@@ -41,7 +41,7 @@ const languageExtensions: Record<LanguageKey, Extension> = {
 const LeftPanel: React.FC = () => {
   const [lang, setLang] = useState<LanguageKey>("python");
 
-  const { code, language, setCode, setLanguage } = useCodeStore();
+  const { code, setCode, setLanguage } = useCodeStore();
 
   const extensions = useMemo(() => {
     return [languageExtensions[lang]];
